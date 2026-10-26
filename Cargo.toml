@@ -1,0 +1,18 @@
+[package]
+name = "sigmaos-compositor"
+version = "0.1.0"
+edition = "2021"
+authors = ["SigmaOS Project"]
+description = "Display compositor (Wayland-based)"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/AaryanSinghChauhan09/SigmaOS-compositor"
+readme = "README.md"
+keywords = ["compositor", "wayland", "display"]
+categories = ["gui"]
+
+[dependencies]
+sigmaos-kernel = { version = "0.1", path = "../SigmaOS-kernel" }
+sigmaos-gpu = { version = "0.1", path = "../SigmaOS-gpu" }
+
+[profile.release]
+opt-level = 3
