@@ -1,4 +1,3 @@
-use std::env;
 //! SigmaOS-compositor - SigmaOS Component CLI
 //!
 //! Command-line interface for SigmaOS-compositor component.
@@ -6,7 +5,7 @@ use std::env;
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 use log::info;
-use compositor::{Component, ComponentStatus, Config, compositor};
+use compositor::{Component, Config, Compositor};
 
 #[derive(Parser)]
 #[command(name = "compositor")]
@@ -38,11 +37,11 @@ enum Commands {
     },
 }
 
-fn main() -> Result<()> { -> Result<()> {
+fn main() -> Result<()> {
     let cli = Cli::parse();
     
     let config = Config::default();
-    let mut component = compositor::new(config);
+    let mut component = Compositor::new(config);
 
     match cli.command {
         Commands::Init { debug } => {
@@ -79,7 +78,7 @@ fn main() -> Result<()> { -> Result<()> {
             
             // Keep running
             tokio::runtime::Runtime::new()?.block_on(async {
-                tokio::signal::ctrl_c().await.unwrap();
+                let _ = tokio::signal::ctrl_c().await;
                 info!("Received Ctrl+C, shutting down...");
             });
             
@@ -89,19 +88,4 @@ fn main() -> Result<()> { -> Result<()> {
     }
 
     Ok(())
-}
-
-#[derive(Debug, Clone)]
-struct Config {
-    verbose: bool,
-    dry_run: bool,
-}
-
-impl Config {
-    fn from_env() -> Self {
-        Config {
-            verbose: env::var("VERBOSE").is_ok(),
-            dry_run: env::var("DRY_RUN").is_ok(),
-        }
-    }
 }
